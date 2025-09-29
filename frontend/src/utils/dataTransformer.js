@@ -85,13 +85,12 @@ export const getInitialElements = () => {
         // *** 移除 label，不再显示百分比文字 ***
         // label: `${(edge.necessity * 100).toFixed(0)}% 依赖`, 
 
-        // *** 关键修改：用线的粗细表示依赖性 ***
+        // *** 关键修改：用线的不透明度表示依赖性 ***
         style: {
-            // 将依赖度 (0.00 ~ 1.00) 映射到线宽 (例如 1px 到 5px)
-            strokeWidth: edge.necessity * 4 + 1, // 粗细范围约 1px (低) 到 5px (高)
-            stroke: '#555', // 设置线的颜色
+            strokeWidth: 2.5, // 给所有线一个固定的宽度
+            stroke: 'black', // 设置线的颜色
+            opacity: edge.necessity, // 将依赖度直接映射到不透明度
         },
-        // *******************************************
     }));
 
     // --- 动态添加 "You" 节点和边的逻辑 ---
@@ -125,8 +124,9 @@ export const getInitialElements = () => {
                 source: 'you',
                 target: skillNode.id,
                 style: {
-                    strokeWidth: 2, // 可以给这些起始边一个固定的样式
-                    stroke: '#555',
+                    strokeWidth: 2.5, // 与其他线保持一致的宽度
+                    stroke: 'black',
+                    opacity: 1, // 起始边默认完全不透明
                 },
             };
             rfEdges.push(newEdge);

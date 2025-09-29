@@ -27,7 +27,7 @@ const defaultEdgeOptions = {
     type: 'arrowclosed',
     width: 8, // 箭头宽度
     height: 8, // 箭头高度
-    color: '#555', // 箭头颜色
+    color: 'black', // 箭头颜色
   },
 };
 // **************************
@@ -38,7 +38,7 @@ function CareerGraph() {
   const [edges, setEdges] = useEdgesState(initialElements.edges);
 
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
+    <div style={{ width: '100vw', height: '100vh', backgroundColor: 'white' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -48,7 +48,7 @@ function CareerGraph() {
         fitView
       >
         <Controls />
-        <Background variant="dots" gap={12} size={1} />
+        <Background />
       </ReactFlow>
     </div>
   );

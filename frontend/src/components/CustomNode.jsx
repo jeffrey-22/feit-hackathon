@@ -6,29 +6,31 @@ const CustomNode = ({ data, isConnectable }) => {
     const isJob = data.type === 'job';
 
     // 节点的整体样式 (保持圆形)
+    // 增大节点尺寸以容纳更多文字
     const nodeStyle = {
-        width: '60px',
-        height: '60px',
+        width: '80px',
+        height: '80px',
         borderRadius: '50%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-
-        // 职业和技能颜色区分
-        border: isJob ? '3px solid #337ab7' : '2px solid #5cb85c',
-        backgroundColor: isJob ? '#e6f7ff' : '#f9fff9',
+        // 改为实心填充
+        backgroundColor: isJob ? '#337ab7' : '#5cb85c', // 蓝色 for job, 绿色 for skill
         textAlign: 'center',
         boxShadow: '0 2px 4px rgba(0,0,0,0.15)',
+        // 确保文字在容器内换行
+        wordBreak: 'break-word',
     };
 
     // 内部文本样式
     const textStyle = {
         fontWeight: 'bold',
-        fontSize: '0.8em',
-        color: '#333',
-        whiteSpace: 'pre-wrap',
+        fontSize: '12px', // 使用固定像素以获得更可控的布局
+        color: 'white', // 文字改为白色
         padding: '5px',
-        lineHeight: '1.2'
+        lineHeight: '1.2',
+        // whiteSpace: 'pre-wrap' 依然有用，如果数据中有换行符
+        whiteSpace: 'pre-wrap',
     };
 
     // *** 关键修改：隐藏 Handle 的样式 ***
