@@ -2,6 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
+import './App.css';
 import './index.css';
 
 // 别忘了导入 React Flow 的基础样式// 旧的（错误的）：

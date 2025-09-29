@@ -2,10 +2,14 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 
-const CustomNode = ({ data, isConnectable }) => {
-    const isJob = data.type === 'job';
 
-    // 节点的整体样式 (保持圆形)
+const CustomNode = ({ data, type, isConnectable }) => {
+    // 1. 使用顶级的 `type` prop，而不是 `data.type`
+    const isJob = type === 'job';
+    // 2. 从 `data` 对象中获取 `selected` 状态
+    const isSelected = data.selected;
+
+    // 节点的整体样式
     // 增大节点尺寸以容纳更多文字
     const nodeStyle = {
         width: '80px',
@@ -20,6 +24,9 @@ const CustomNode = ({ data, isConnectable }) => {
         boxShadow: '0 2px 4px rgba(0,0,0,0.15)',
         // 确保文字在容器内换行
         wordBreak: 'break-word',
+        // 3. 根据 isSelected 状态添加高亮样式
+        border: isSelected ? '3px solid #ffc107' : 'none',
+        transition: 'border 0.2s ease-in-out',
     };
 
     // 内部文本样式
@@ -54,7 +61,7 @@ const CustomNode = ({ data, isConnectable }) => {
 
             {/* 节点名称 (核心内容) */}
             <div style={textStyle}>
-                {data.name}
+                {data.label}
             </div>
 
             {/* 2. Source Handle (出口) - 放在右侧 (Position.Right) */}
