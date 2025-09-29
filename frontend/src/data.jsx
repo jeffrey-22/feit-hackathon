@@ -137,22 +137,10 @@ const originalEdges = [
 const nodeMap = getNodeMap(originalNodes);
 
 // ----------------------------------------------------
-// 3. 添加起点 'you' 和它连接的初始边
+// 3. 准备初始边
 // ----------------------------------------------------
-const youNode = { id: 'you', name: '我 (起点)', type: 'job', time: 0, value: 0 };
-const initialNodes = [youNode, ...originalNodes];
-
-const startingEdges = [
-    // 假设你已经具备 HTML/CSS、Git 和 Linux 的基础
-    { node_start_name: "我 (起点)", node_end_name: "HTML/CSS", necessity: 0.80 },
-    { node_start_name: "我 (起点)", node_end_name: "Git", necessity: 0.90 },
-    { node_start_name: "我 (起点)", node_end_name: "Linux", necessity: 0.70 },
-    { node_start_name: "我 (起点)", node_end_name: "数据结构", necessity: 0.50 },
-];
-// 必须手动给 'you' 节点添加 ID
-nodeMap["我 (起点)"] = 'you';
-
-const initialEdges = [...originalEdges, ...startingEdges];
+// 我们现在只使用原始的边数据，"You" 节点的边将由 dataTransformer 动态生成
+const initialEdges = [...originalEdges];
 
 // ----------------------------------------------------
 // 4. 将边转换为 ID 格式
@@ -179,7 +167,8 @@ const finalEdges = initialEdges.map((edge, index) => {
 // 最终数据结构
 // ----------------------------------------------------
 const initialGraphData = {
-    nodes: initialNodes,
+    // 我们现在只使用原始的节点数据，"You" 节点将由 dataTransformer 动态生成
+    nodes: originalNodes,
     edges: finalEdges,
 };
 

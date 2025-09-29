@@ -1,4 +1,5 @@
 // src/utils/dataTransformer.js
+import { Position } from '@xyflow/react';
 
 import dagre from 'dagre';
 
@@ -60,6 +61,7 @@ const getLayoutedElements = (nodes, edges, direction = 'LR') => {
 // 2. 数据转换和准备函数
 // ==========================================================
 export const getInitialElements = () => {
+    // 步骤 1: 正常转换原始数据中的节点和边
     // 转换节点数据到 React Flow 格式
     const rfNodes = initialGraphData.nodes.map(node => ({
         id: node.id,
@@ -91,6 +93,45 @@ export const getInitialElements = () => {
         },
         // *******************************************
     }));
+
+    // --- 动态添加 "You" 节点和边的逻辑 ---
+
+    // 步骤 2: 找出所有作为 "目标" 的节点 ID
+    const targetNodeIds = new Set(rfEdges.map(edge => edge.target));
+
+    // 步骤 3: 筛选出所有没有前置依赖的 "技能" 节点 (根技能)
+    const rootSkillNodes = rfNodes.filter(
+        node => node.data.type === 'skill' && !targetNodeIds.has(node.id)
+    );
+
+    // 步骤 4: 如果存在根技能，则创建 "You" 节点
+    if (rootSkillNodes.length > 0) {
+        const youNode = {
+            id: 'you',
+            // 保持 data 结构与其他节点一致
+            data: { name: 'You', type: 'you' },
+            // *** 关键修改：使用 'skillNode' 类型，让 CustomNode 来渲染它 ***
+            // CustomNode 内部会因为它 data.type 不是 'job' 而给它一个非职业的样式
+            type: 'skillNode',
+            position: { x: 0, y: 0 },
+            // 移除 sourcePosition，因为 CustomNode 已经定义了 Handle 的位置
+        };
+        rfNodes.push(youNode);
+
+        // 步骤 5: 为每个根技能创建从 "You" 出发的边
+        rootSkillNodes.forEach(skillNode => {
+            const newEdge = {
+                id: `you->${skillNode.id}`,
+                source: 'you',
+                target: skillNode.id,
+                style: {
+                    strokeWidth: 2, // 可以给这些起始边一个固定的样式
+                    stroke: '#555',
+                },
+            };
+            rfEdges.push(newEdge);
+        });
+    }
 
     // 应用自动布局
     return getLayoutedElements(rfNodes, rfEdges, 'LR');
