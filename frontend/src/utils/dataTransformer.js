@@ -7,8 +7,9 @@ import dagre from 'dagre';
 import initialGraphData from '../data'; // 假设你的数据文件叫 src/data.js
 
 // 基础节点宽度和高度，用于布局计算
-const nodeWidth = 172;
-const nodeHeight = 36;
+// *** 关键修改：将布局尺寸与 CustomNode.jsx 中的实际渲染尺寸 (80x80) 保持一致 ***
+const nodeWidth = 80;
+const nodeHeight = 80;
 
 // ==========================================================
 // 1. 自动布局函数 (使用 Dagre)
@@ -23,8 +24,8 @@ const getLayoutedElements = (nodes, edges, direction = 'LR') => {
     dagreGraph.setGraph({
         // *** 关键修改：方向设置为 LR (Left-to-Right) ***
         rankdir: direction, // 现在 direction 默认为 'LR'
-        ranksep: 100,
-        nodesep: 50,
+        ranksep: 120,
+        nodesep: 40,
     });
     // *******************************************
 

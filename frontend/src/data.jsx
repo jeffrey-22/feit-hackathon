@@ -1,149 +1,183 @@
-// src/data.js - 融合了同学提供的数据，并添加了 ID 和起点
+// src/data.js - Optimized data with correct dependencies and English names.
 
 // ----------------------------------------------------
-// 辅助函数：根据节点名称查找其 ID
+// Helper function: Get a map of node names to their generated IDs
 // ----------------------------------------------------
 const getNodeMap = (nodes) => {
     const map = {};
     nodes.forEach(node => {
-        // 使用一个简单的逻辑生成 ID，确保唯一性
-        let id = node.name.toLowerCase().replace(/[\/\(\)\s-]/g, '_').replace(/_/g, '_');
-        // 特殊处理一些较长的名字
-        if (node.name.includes('PyTorch')) id = 'dl_pytorch';
-        if (node.name.includes('TensorFlow')) id = 'dl_tf';
-        if (node.name.includes('云计算')) id = 'cloud';
+        let id = node.name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/_$/, '');
         map[node.name] = id;
-        node.id = id; // 同时给原始节点数据添加 ID
+        node.id = id; // Add ID to the original node object
 
-        // Dagre rank 标记：将所有目标职业固定在最右侧 (L-R 布局)
-        if (node.type === '职业') {
+        // Set Dagre rank for job nodes to align them to the right
+        if (node.type.toLowerCase() === 'job') {
             node.type = 'job'; // 统一类型
             node.dagre = { rank: 'max' };
-        } else {
+        } else if (node.type.toLowerCase() === 'skill') {
             node.type = 'skill'; // 统一类型
+        } else {
+            console.log(node.type);
         }
     });
     return map;
 };
 
-
 const originalNodes = [
     // ----------------------------------------------------
-    // 1. 目标职业 (将固定在最右侧)
+    // 1. Target Jobs (Will be fixed to the far right)
     // ----------------------------------------------------
-    { "name": "数据科学工程师", "type": "职业", "time": 1200, "value": 93 },
-    { "name": "前端工程师", "type": "职业", "time": 900, "value": 90 },
-    { "name": "算法工程师", "type": "职业", "time": 1400, "value": 95 },
-    { "name": "后端工程师", "type": "职业", "time": 1100, "value": 92 },
+    { "name": "Data Scientist", "type": "Job", "time": 1200, "value": 93 },
+    { "name": "Frontend Engineer", "type": "Job", "time": 900, "value": 90 },
+    { "name": "Algorithm Engineer", "type": "Job", "time": 1400, "value": 95 },
+    { "name": "Backend Engineer", "type": "Job", "time": 1100, "value": 92 },
 
     // ----------------------------------------------------
-    // 2. 核心/专业技能
+    // 2. Core & Specialised Skills
     // ----------------------------------------------------
-    { "name": "Python", "type": "技能", "time": 120, "value": 92 },
-    { "name": "C++", "type": "技能", "time": 200, "value": 88 },
-    { "name": "JavaScript", "type": "技能", "time": 140, "value": 91 },
-    { "name": "TypeScript", "type": "技能", "time": 60, "value": 85 },
-    { "name": "HTML/CSS", "type": "技能", "time": 100, "value": 86 },
-    { "name": "React", "type": "技能", "time": 160, "value": 89 },
-    { "name": "Node.js", "type": "技能", "time": 150, "value": 87 },
-    { "name": "SQL", "type": "技能", "time": 100, "value": 90 },
-    { "name": "NoSQL", "type": "技能", "time": 80, "value": 80 },
-    { "name": "数据结构", "type": "技能", "time": 150, "value": 92 },
-    { "name": "算法", "type": "技能", "time": 200, "value": 95 },
-    { "name": "统计学", "type": "技能", "time": 150, "value": 90 },
-    { "name": "机器学习", "type": "技能", "time": 250, "value": 94 },
-    { "name": "深度学习(TensorFlow)", "type": "技能", "time": 180, "value": 88 },
-    { "name": "深度学习(PyTorch)", "type": "技能", "time": 180, "value": 88 },
-    { "name": "数据可视化", "type": "技能", "time": 80, "value": 82 },
-    { "name": "Pandas/NumPy", "type": "技能", "time": 90, "value": 89 },
-    { "name": "系统设计", "type": "技能", "time": 180, "value": 91 },
-    { "name": "REST API 设计", "type": "技能", "time": 100, "value": 88 },
-    { "name": "Linux", "type": "技能", "time": 60, "value": 83 },
-    { "name": "Git", "type": "技能", "time": 40, "value": 84 },
-    { "name": "Docker", "type": "技能", "time": 50, "value": 86 },
-    { "name": "Kubernetes", "type": "技能", "time": 80, "value": 85 },
-    { "name": "云计算(任一主流云)", "type": "技能", "time": 120, "value": 87 },
-    { "name": "单元/集成测试", "type": "技能", "time": 80, "value": 82 }
+    // Foundational
+    { "name": "Computer Science Fundamentals", "type": "Skill", "time": 100, "value": 95 },
+    { "name": "Git", "type": "Skill", "time": 40, "value": 90 },
+    { "name": "Linux", "type": "Skill", "time": 60, "value": 85 },
+    { "name": "Data Structures", "type": "Skill", "time": 150, "value": 94 },
+    { "name": "Algorithms", "type": "Skill", "time": 200, "value": 96 },
+
+    // Programming Languages
+    { "name": "Python", "type": "Skill", "time": 120, "value": 92 },
+    { "name": "C++", "type": "Skill", "time": 200, "value": 88 },
+    { "name": "JavaScript", "type": "Skill", "time": 140, "value": 91 },
+    { "name": "TypeScript", "type": "Skill", "time": 80, "value": 89 },
+
+    // Frontend
+    { "name": "HTML/CSS", "type": "Skill", "time": 100, "value": 88 },
+    { "name": "React", "type": "Skill", "time": 160, "value": 90 },
+    { "name": "Build Tools (Vite/Webpack)", "type": "Skill", "time": 70, "value": 86 },
+    { "name": "State Management (Redux/Zustand)", "type": "Skill", "time": 90, "value": 87 },
+
+    // Backend
+    { "name": "Node.js", "type": "Skill", "time": 150, "value": 87 },
+    { "name": "System Design", "type": "Skill", "time": 180, "value": 93 },
+    { "name": "REST API Design", "type": "Skill", "time": 100, "value": 90 },
+    { "name": "Microservices", "type": "Skill", "time": 120, "value": 88 },
+    { "name": "Databases (SQL)", "type": "Skill", "time": 100, "value": 91 },
+    { "name": "Databases (NoSQL)", "type": "Skill", "time": 80, "value": 85 },
+
+    // Data Science & ML
+    { "name": "Statistics", "type": "Skill", "time": 150, "value": 92 },
+    { "name": "Pandas/NumPy", "type": "Skill", "time": 90, "value": 89 },
+    { "name": "Data Visualization", "type": "Skill", "time": 80, "value": 84 },
+    { "name": "Machine Learning", "type": "Skill", "time": 250, "value": 95 },
+    { "name": "Deep Learning (PyTorch/TensorFlow)", "type": "Skill", "time": 220, "value": 94 },
+
+    // DevOps & Infrastructure
+    { "name": "Docker", "type": "Skill", "time": 60, "value": 88 },
+    { "name": "Kubernetes", "type": "Skill", "time": 90, "value": 87 },
+    { "name": "CI/CD", "type": "Skill", "time": 70, "value": 86 },
+    { "name": "Cloud Computing (AWS/GCP/Azure)", "type": "Skill", "time": 120, "value": 89 },
+
+    // General
+    { "name": "Unit/Integration Testing", "type": "Skill", "time": 80, "value": 85 }
 ];
 
 const originalEdges = [
     // ----------------------------------------------------
-    // 边数据 (使用名称)
+    // Skill Dependencies
     // ----------------------------------------------------
-    /* —— 技能 → 职业 —— */
-    { "node_start_name": "Python", "node_end_name": "数据科学工程师", "necessity": 0.90 },
-    { "node_start_name": "统计学", "node_end_name": "数据科学工程师", "necessity": 0.85 },
-    { "node_start_name": "机器学习", "node_end_name": "数据科学工程师", "necessity": 0.90 },
-    { "node_start_name": "Pandas/NumPy", "node_end_name": "数据科学工程师", "necessity": 0.80 },
-    { "node_start_name": "数据可视化", "node_end_name": "数据科学工程师", "necessity": 0.60 },
-    { "node_start_name": "SQL", "node_end_name": "数据科学工程师", "necessity": 0.75 },
-    { "node_start_name": "深度学习(TensorFlow)", "node_end_name": "数据科学工程师", "necessity": 0.70 },
-    { "node_start_name": "深度学习(PyTorch)", "node_end_name": "数据科学工程师", "necessity": 0.70 },
-    { "node_start_name": "Git", "node_end_name": "数据科学工程师", "necessity": 0.60 },
+    // Foundational Path
+    { "node_start_name": "Computer Science Fundamentals", "node_end_name": "Data Structures", "necessity": 0.9 },
+    { "node_start_name": "Data Structures", "node_end_name": "Algorithms", "necessity": 0.95 },
+    { "node_start_name": "Algorithms", "node_end_name": "System Design", "necessity": 0.6 },
+    { "node_start_name": "Linux", "node_end_name": "Docker", "necessity": 0.7 },
 
-    { "node_start_name": "HTML/CSS", "node_end_name": "前端工程师", "necessity": 0.90 },
-    { "node_start_name": "JavaScript", "node_end_name": "前端工程师", "necessity": 0.95 },
-    { "node_start_name": "TypeScript", "node_end_name": "前端工程师", "necessity": 0.75 },
-    { "node_start_name": "React", "node_end_name": "前端工程师", "necessity": 0.85 },
-    { "node_start_name": "单元/集成测试", "node_end_name": "前端工程师", "necessity": 0.60 },
-    { "node_start_name": "Git", "node_end_name": "前端工程师", "necessity": 0.60 },
+    // Language Dependencies
+    { "node_start_name": "JavaScript", "node_end_name": "TypeScript", "necessity": 0.9 },
 
-    { "node_start_name": "算法", "node_end_name": "算法工程师", "necessity": 0.95 },
-    { "node_start_name": "数据结构", "node_end_name": "算法工程师", "necessity": 0.90 },
-    { "node_start_name": "Python", "node_end_name": "算法工程师", "necessity": 0.80 },
-    { "node_start_name": "C++", "node_end_name": "算法工程师", "necessity": 0.80 },
-    { "node_start_name": "机器学习", "node_end_name": "算法工程师", "necessity": 0.80 },
-    { "node_start_name": "深度学习(PyTorch)", "node_end_name": "算法工程师", "necessity": 0.70 },
-    { "node_start_name": "Git", "node_end_name": "算法工程师", "necessity": 0.55 },
+    // Frontend Path
+    { "node_start_name": "HTML/CSS", "node_end_name": "JavaScript", "necessity": 0.5 }, // Not a strict prerequisite, but helpful context
+    { "node_start_name": "JavaScript", "node_end_name": "React", "necessity": 0.95 },
+    { "node_start_name": "React", "node_end_name": "State Management (Redux/Zustand)", "necessity": 0.8 },
+    { "node_start_name": "React", "node_end_name": "Build Tools (Vite/Webpack)", "necessity": 0.75 },
+    { "node_start_name": "TypeScript", "node_end_name": "React", "necessity": 0.6 }, // Optional but recommended
 
-    { "node_start_name": "Node.js", "node_end_name": "后端工程师", "necessity": 0.85 },
-    { "node_start_name": "Python", "node_end_name": "后端工程师", "necessity": 0.70 },
-    { "node_start_name": "SQL", "node_end_name": "后端工程师", "necessity": 0.85 },
-    { "node_start_name": "NoSQL", "node_end_name": "后端工程师", "necessity": 0.65 },
-    { "node_start_name": "REST API 设计", "node_end_name": "后端工程师", "necessity": 0.90 },
-    { "node_start_name": "系统设计", "node_end_name": "后端工程师", "necessity": 0.85 },
-    { "node_start_name": "Docker", "node_end_name": "后端工程师", "necessity": 0.70 },
-    { "node_start_name": "Kubernetes", "node_end_name": "后端工程师", "necessity": 0.60 },
-    { "node_start_name": "云计算(任一主流云)", "node_end_name": "后端工程师", "necessity": 0.75 },
-    { "node_start_name": "Git", "node_end_name": "后端工程师", "necessity": 0.65 },
+    // Backend Path
+    { "node_start_name": "JavaScript", "node_end_name": "Node.js", "necessity": 0.95 },
+    { "node_start_name": "Node.js", "node_end_name": "REST API Design", "necessity": 0.8 },
+    { "node_start_name": "Python", "node_end_name": "REST API Design", "necessity": 0.8 },
+    { "node_start_name": "System Design", "node_end_name": "Microservices", "necessity": 0.85 },
+    { "node_start_name": "REST API Design", "node_end_name": "Microservices", "necessity": 0.7 },
 
-    /* —— 技能 → 技能（前置或强相关）—— */
-    { "node_start_name": "JavaScript", "node_end_name": "React", "necessity": 0.85 },
-    { "node_start_name": "TypeScript", "node_end_name": "React", "necessity": 0.60 },
-    { "node_start_name": "HTML/CSS", "node_end_name": "React", "necessity": 0.65 },
+    // Data Science Path
+    { "node_start_name": "Python", "node_end_name": "Pandas/NumPy", "necessity": 0.95 },
+    { "node_start_name": "Statistics", "node_end_name": "Machine Learning", "necessity": 0.85 },
+    { "node_start_name": "Pandas/NumPy", "node_end_name": "Machine Learning", "necessity": 0.9 },
+    { "node_start_name": "Machine Learning", "node_end_name": "Deep Learning (PyTorch/TensorFlow)", "necessity": 0.9 },
+    { "node_start_name": "Pandas/NumPy", "node_end_name": "Data Visualization", "necessity": 0.8 },
 
-    { "node_start_name": "JavaScript", "node_end_name": "Node.js", "necessity": 0.90 },
-    { "node_start_name": "Node.js", "node_end_name": "REST API 设计", "necessity": 0.70 },
-    { "node_start_name": "Python", "node_end_name": "REST API 设计", "necessity": 0.70 },
+    // DevOps Path
+    { "node_start_name": "Docker", "node_end_name": "Kubernetes", "necessity": 0.9 },
+    { "node_start_name": "Git", "node_end_name": "CI/CD", "necessity": 0.9 },
+    { "node_start_name": "Docker", "node_end_name": "CI/CD", "necessity": 0.8 },
+    { "node_start_name": "Kubernetes", "node_end_name": "Cloud Computing (AWS/GCP/Azure)", "necessity": 0.7 },
 
-    { "node_start_name": "统计学", "node_end_name": "机器学习", "necessity": 0.80 },
-    { "node_start_name": "Python", "node_end_name": "Pandas/NumPy", "necessity": 0.85 },
-    { "node_start_name": "Pandas/NumPy", "node_end_name": "机器学习", "necessity": 0.70 },
-    { "node_start_name": "机器学习", "node_end_name": "深度学习(TensorFlow)", "necessity": 0.75 },
-    { "node_start_name": "机器学习", "node_end_name": "深度学习(PyTorch)", "necessity": 0.75 },
+    // ----------------------------------------------------
+    // Skill -> Job Mappings
+    // ----------------------------------------------------
+    // General Skills to All Jobs
+    ...["Data Scientist", "Frontend Engineer", "Algorithm Engineer", "Backend Engineer"].flatMap(job => [
+        { "node_start_name": "Git", "node_end_name": job, "necessity": 0.85 },
+        { "node_start_name": "Data Structures", "node_end_name": job, "necessity": 0.8 },
+        { "node_start_name": "Algorithms", "node_end_name": job, "necessity": 0.8 },
+        { "node_start_name": "Unit/Integration Testing", "node_end_name": job, "necessity": 0.65 },
+    ]),
 
-    { "node_start_name": "Linux", "node_end_name": "Docker", "necessity": 0.60 },
-    { "node_start_name": "Docker", "node_end_name": "Kubernetes", "necessity": 0.70 },
-    { "node_start_name": "Kubernetes", "node_end_name": "云计算(任一主流云)", "necessity": 0.60 },
+    // Frontend Engineer
+    { "node_start_name": "HTML/CSS", "node_end_name": "Frontend Engineer", "necessity": 0.95 },
+    { "node_start_name": "JavaScript", "node_end_name": "Frontend Engineer", "necessity": 0.95 },
+    { "node_start_name": "React", "node_end_name": "Frontend Engineer", "necessity": 0.9 },
+    { "node_start_name": "TypeScript", "node_end_name": "Frontend Engineer", "necessity": 0.8 },
+    { "node_start_name": "Build Tools (Vite/Webpack)", "node_end_name": "Frontend Engineer", "necessity": 0.75 },
+    { "node_start_name": "State Management (Redux/Zustand)", "node_end_name": "Frontend Engineer", "necessity": 0.7 },
 
-    { "node_start_name": "数据结构", "node_end_name": "算法", "necessity": 0.85 },
-    { "node_start_name": "C++", "node_end_name": "算法", "necessity": 0.65 },
+    // Backend Engineer
+    { "node_start_name": "Python", "node_end_name": "Backend Engineer", "necessity": 0.8 },
+    { "node_start_name": "Node.js", "node_end_name": "Backend Engineer", "necessity": 0.8 },
+    { "node_start_name": "Databases (SQL)", "node_end_name": "Backend Engineer", "necessity": 0.9 },
+    { "node_start_name": "Databases (NoSQL)", "node_end_name": "Backend Engineer", "necessity": 0.7 },
+    { "node_start_name": "REST API Design", "node_end_name": "Backend Engineer", "necessity": 0.9 },
+    { "node_start_name": "System Design", "node_end_name": "Backend Engineer", "necessity": 0.9 },
+    { "node_start_name": "Microservices", "node_end_name": "Backend Engineer", "necessity": 0.75 },
+    { "node_start_name": "Docker", "node_end_name": "Backend Engineer", "necessity": 0.8 },
+    { "node_start_name": "CI/CD", "node_end_name": "Backend Engineer", "necessity": 0.7 },
+    { "node_start_name": "Cloud Computing (AWS/GCP/Azure)", "node_end_name": "Backend Engineer", "necessity": 0.75 },
 
-    { "node_start_name": "Git", "node_end_name": "单元/集成测试", "necessity": 0.40 },
-    { "node_start_name": "单元/集成测试", "node_end_name": "系统设计", "necessity": 0.35 }
+    // Data Scientist
+    { "node_start_name": "Python", "node_end_name": "Data Scientist", "necessity": 0.95 },
+    { "node_start_name": "Statistics", "node_end_name": "Data Scientist", "necessity": 0.9 },
+    { "node_start_name": "Pandas/NumPy", "node_end_name": "Data Scientist", "necessity": 0.9 },
+    { "node_start_name": "Databases (SQL)", "node_end_name": "Data Scientist", "necessity": 0.8 },
+    { "node_start_name": "Data Visualization", "node_end_name": "Data Scientist", "necessity": 0.85 },
+    { "node_start_name": "Machine Learning", "node_end_name": "Data Scientist", "necessity": 0.95 },
+    { "node_start_name": "Deep Learning (PyTorch/TensorFlow)", "node_end_name": "Data Scientist", "necessity": 0.8 },
+
+    // Algorithm Engineer
+    { "node_start_name": "C++", "node_end_name": "Algorithm Engineer", "necessity": 0.9 },
+    { "node_start_name": "Python", "node_end_name": "Algorithm Engineer", "necessity": 0.85 },
+    { "node_start_name": "Algorithms", "node_end_name": "Algorithm Engineer", "necessity": 0.98 },
+    { "node_start_name": "Data Structures", "node_end_name": "Algorithm Engineer", "necessity": 0.95 },
+    { "node_start_name": "Machine Learning", "node_end_name": "Algorithm Engineer", "necessity": 0.8 },
+    { "node_start_name": "Deep Learning (PyTorch/TensorFlow)", "node_end_name": "Algorithm Engineer", "necessity": 0.75 }
 ];
 
-// 运行转换工具
+// Run the conversion utility
 const nodeMap = getNodeMap(originalNodes);
 
 // ----------------------------------------------------
-// 3. 准备初始边
+// 3. Prepare Initial Edges
 // ----------------------------------------------------
-// 我们现在只使用原始的边数据，"You" 节点的边将由 dataTransformer 动态生成
 const initialEdges = [...originalEdges];
 
 // ----------------------------------------------------
-// 4. 将边转换为 ID 格式
+// 4. Convert Edges to ID format
 // ----------------------------------------------------
 const finalEdges = initialEdges.map((edge, index) => {
     const sourceId = nodeMap[edge.node_start_name];
@@ -155,7 +189,7 @@ const finalEdges = initialEdges.map((edge, index) => {
     }
 
     return {
-        id: `e-${sourceId}-${targetId}-${index}`, // 生成唯一 ID
+        id: `e-${sourceId}-${targetId}-${index}`, // Generate unique ID
         source: sourceId,
         target: targetId,
         necessity: edge.necessity,
@@ -164,10 +198,9 @@ const finalEdges = initialEdges.map((edge, index) => {
 
 
 // ----------------------------------------------------
-// 最终数据结构
+// Final Data Structure
 // ----------------------------------------------------
 const initialGraphData = {
-    // 我们现在只使用原始的节点数据，"You" 节点将由 dataTransformer 动态生成
     nodes: originalNodes,
     edges: finalEdges,
 };
